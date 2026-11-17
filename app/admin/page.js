@@ -51,15 +51,15 @@ export default function Admin() {
     sb().rpc('is_admin').then(({ data }) => setIsAdmin(!!data));
   }, [session]);
 
-  if (session === undefined) return <div className="ad-shell"><div className="ad-center">Cargando…</div></div>;
+  if (session === undefined) return <div className="pn-shell"><div className="pn-center">Cargando…</div></div>;
   if (!session) return <Login />;
-  if (isAdmin === null) return <div className="ad-shell"><div className="ad-center">Comprobando acceso…</div></div>;
+  if (isAdmin === null) return <div className="pn-shell"><div className="pn-center">Comprobando acceso…</div></div>;
   if (!isAdmin)
     return (
-      <div className="ad-shell"><div className="ad-center">
-        <img src="/img/logo-rafracar-600.png" alt="Rafracar" className="ad-logo-big" />
+      <div className="pn-shell"><div className="pn-center">
+        <img src="/img/logo-rafracar-600.png" alt="Rafracar" className="pn-logo-big" />
         <p>Esta cuenta ({session.user.email}) no tiene permiso para gestionar el stock.</p>
-        <button className="ad-btn ghost" onClick={() => sb().auth.signOut()}>Salir</button>
+        <button className="pn-btn ghost" onClick={() => sb().auth.signOut()}>Salir</button>
       </div></div>
     );
   return <Panel session={session} />;
@@ -78,15 +78,15 @@ function Login() {
     setBusy(false);
   };
   return (
-    <div className="ad-shell">
-      <form className="ad-login" onSubmit={go}>
-        <img src="/img/logo-rafracar-600.png" alt="Rafracar" className="ad-logo-big" />
+    <div className="pn-shell">
+      <form className="pn-login" onSubmit={go}>
+        <img src="/img/logo-rafracar-600.png" alt="Rafracar" className="pn-logo-big" />
         <h1>Gestión del stock</h1>
         <label>Email<input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
         <label>Contraseña<input type="password" autoComplete="current-password" value={pass} onChange={(e) => setPass(e.target.value)} required /></label>
-        {err && <p className="ad-err">{err}</p>}
-        <button className="ad-btn" disabled={busy}>{busy ? 'Entrando…' : 'Entrar'}</button>
-        <p className="ad-hint">Solo tienes que entrar una vez: el móvil recuerda la sesión.</p>
+        {err && <p className="pn-err">{err}</p>}
+        <button className="pn-btn" disabled={busy}>{busy ? 'Entrando…' : 'Entrar'}</button>
+        <p className="pn-hint">Solo tienes que entrar una vez: el móvil recuerda la sesión.</p>
       </form>
     </div>
   );
@@ -134,21 +134,21 @@ function Panel({ session }) {
     );
 
   return (
-    <div className="ad-shell">
-      <header className="ad-top">
+    <div className="pn-shell">
+      <header className="pn-top">
         <img src="/img/logo-rafracar-600.png" alt="Rafracar" />
-        <div className="ad-top-r">
-          <a href="/" target="_blank" rel="noopener" className="ad-link">Ver web</a>
-          <button className="ad-link" onClick={() => sb().auth.signOut()}>Salir</button>
+        <div className="pn-top-r">
+          <a href="/" target="_blank" rel="noopener" className="pn-link">Ver web</a>
+          <button className="pn-link" onClick={() => sb().auth.signOut()}>Salir</button>
         </div>
       </header>
 
-      <main className="ad-main">
-        <button className="ad-add" onClick={() => setEditing('new')}>
+      <main className="pn-main">
+        <button className="pn-add" onClick={() => setEditing('new')}>
           <span>+</span> Añadir coche
         </button>
 
-        <div className="ad-tabs">
+        <div className="pn-tabs">
           {ESTADOS.map(([k, t]) => (
             <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>
               {t}<b>{counts[k] || 0}</b>
@@ -157,29 +157,29 @@ function Panel({ session }) {
         </div>
 
         {cars.length > 6 && (
-          <input className="ad-search" type="search" placeholder="Buscar coche…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <input className="pn-search" type="search" placeholder="Buscar coche…" value={q} onChange={(e) => setQ(e.target.value)} />
         )}
 
-        {loading ? <p className="ad-empty">Cargando coches…</p> : list.length === 0 ? (
-          <p className="ad-empty">{tab === 'disponible' ? 'No hay coches disponibles. Pulsa «Añadir coche».' : `No hay coches ${tab === 'reservado' ? 'reservados' : 'vendidos'}.`}</p>
+        {loading ? <p className="pn-empty">Cargando coches…</p> : list.length === 0 ? (
+          <p className="pn-empty">{tab === 'disponible' ? 'No hay coches disponibles. Pulsa «Añadir coche».' : `No hay coches ${tab === 'reservado' ? 'reservados' : 'vendidos'}.`}</p>
         ) : (
-          <ul className="ad-list">
+          <ul className="pn-list">
             {list.map((c) => (
-              <li key={c.id} className="ad-item">
-                <button className="ad-item-main" onClick={() => setEditing(c)}>
-                  <div className="ad-thumb">{c.fotos?.[0] ? <img src={c.fotos[0]} alt="" /> : <span>Sin foto</span>}</div>
-                  <div className="ad-info">
+              <li key={c.id} className="pn-item">
+                <button className="pn-item-main" onClick={() => setEditing(c)}>
+                  <div className="pn-thumb">{c.fotos?.[0] ? <img src={c.fotos[0]} alt="" /> : <span>Sin foto</span>}</div>
+                  <div className="pn-info">
                     <strong>{c.marca} {c.modelo}</strong>
                     <small>{[c.anio, kmf(c.km)].filter(Boolean).join(' · ')}</small>
                     <em>{eur(c.precio)}</em>
                   </div>
                 </button>
                 <button
-                  className={'ad-star' + (c.destacado ? ' on' : '')}
+                  className={'pn-star' + (c.destacado ? ' on' : '')}
                   aria-label={c.destacado ? 'Quitar de destacados' : 'Destacar en portada'}
                   onClick={() => patch(c, { destacado: !c.destacado }, c.destacado ? 'Quitado de la portada' : 'Destacado en la portada')}
                 >★</button>
-                <div className="ad-seg">
+                <div className="pn-seg">
                   {ESTADOS.map(([k, t]) => (
                     <button key={k} className={(c.estado === k ? 'on ' : '') + k} onClick={() => c.estado !== k && patch(c, { estado: k }, `${c.marca} ${c.modelo}: ${t.toLowerCase()}`)}>
                       {t}
@@ -191,7 +191,7 @@ function Panel({ session }) {
           </ul>
         )}
       </main>
-      {toast && <div className="ad-toast">{toast}</div>}
+      {toast && <div className="pn-toast">{toast}</div>}
     </div>
   );
 }
@@ -280,7 +280,7 @@ function Editor({ car, session, onClose }) {
   };
 
   const Chips = ({ k, opts }) => (
-    <div className="ad-chips">
+    <div className="pn-chips">
       {opts.map((o) => (
         <button type="button" key={o} className={f[k] === o ? 'on' : ''} onClick={() => setF((s) => ({ ...s, [k]: o }))}>
           {o === '0' ? 'CERO' : o}
@@ -290,30 +290,30 @@ function Editor({ car, session, onClose }) {
   );
 
   return (
-    <div className="ad-shell">
-      <header className="ad-top">
-        <button className="ad-link" onClick={() => onClose(false)} disabled={!!busy}>← Volver</button>
+    <div className="pn-shell">
+      <header className="pn-top">
+        <button className="pn-link" onClick={() => onClose(false)} disabled={!!busy}>← Volver</button>
         <strong>{car ? 'Editar coche' : 'Nuevo coche'}</strong>
-        {car ? <a className="ad-link" href={`/coche/${carSlug(car)}`} target="_blank" rel="noopener">Ver</a> : <span />}
+        {car ? <a className="pn-link" href={`/coche/${carSlug(car)}`} target="_blank" rel="noopener">Ver</a> : <span />}
       </header>
 
-      <main className="ad-main ad-form">
+      <main className="pn-main pn-form">
         <section>
           <h2>Fotos</h2>
-          <p className="ad-hint">La primera es la portada. Usa las flechas para cambiar el orden.</p>
-          <div className="ad-photos">
+          <p className="pn-hint">La primera es la portada. Usa las flechas para cambiar el orden.</p>
+          <div className="pn-photos">
             {fotos.map((x, i) => (
-              <div key={(x.url || x.preview) + i} className="ad-photo">
+              <div key={(x.url || x.preview) + i} className="pn-photo">
                 <img src={x.url || x.preview} alt="" />
-                {i === 0 && <span className="ad-cover">Portada</span>}
-                <div className="ad-photo-ctl">
+                {i === 0 && <span className="pn-cover">Portada</span>}
+                <div className="pn-photo-ctl">
                   <button type="button" onClick={() => move(i, -1)} aria-label="Mover antes">‹</button>
                   <button type="button" onClick={() => drop(i)} aria-label="Quitar foto">✕</button>
                   <button type="button" onClick={() => move(i, 1)} aria-label="Mover después">›</button>
                 </div>
               </div>
             ))}
-            <button type="button" className="ad-photo add" onClick={() => fileRef.current?.click()}>
+            <button type="button" className="pn-photo add" onClick={() => fileRef.current?.click()}>
               <span>+</span>Añadir fotos
             </button>
           </div>
@@ -322,7 +322,7 @@ function Editor({ car, session, onClose }) {
 
         <section>
           <h2>Datos del coche</h2>
-          <div className="ad-grid">
+          <div className="pn-grid">
             <label>Marca<input value={f.marca} onChange={set('marca')} placeholder="Ford" list="marcas" autoCapitalize="words" /></label>
             <label>Modelo<input value={f.modelo} onChange={set('modelo')} placeholder="Kuga" autoCapitalize="words" /></label>
             <label className="full">Versión<input value={f.version} onChange={set('version')} placeholder="2.0 TDCi ST-Line 150 CV" /></label>
@@ -336,42 +336,42 @@ function Editor({ car, session, onClose }) {
             {['Audi','BMW','Citroën','Cupra','Dacia','Fiat','Ford','Honda','Hyundai','Jeep','Kia','Land Rover','Mazda','Mercedes-Benz','MG','Mini','Mitsubishi','Nissan','Opel','Peugeot','Renault','Seat','Skoda','Toyota','Volkswagen','Volvo'].map((m) => <option key={m} value={m} />)}
           </datalist>
 
-          <div className="ad-field"><span>Combustible</span><Chips k="combustible" opts={OPCIONES.combustible} /></div>
-          <div className="ad-field"><span>Cambio</span><Chips k="cambio" opts={OPCIONES.cambio} /></div>
-          <div className="ad-field"><span>Carrocería</span><Chips k="tipo" opts={OPCIONES.tipo} /></div>
-          <div className="ad-field"><span>Etiqueta DGT</span><Chips k="etiqueta" opts={OPCIONES.etiqueta} /></div>
+          <div className="pn-field"><span>Combustible</span><Chips k="combustible" opts={OPCIONES.combustible} /></div>
+          <div className="pn-field"><span>Cambio</span><Chips k="cambio" opts={OPCIONES.cambio} /></div>
+          <div className="pn-field"><span>Carrocería</span><Chips k="tipo" opts={OPCIONES.tipo} /></div>
+          <div className="pn-field"><span>Etiqueta DGT</span><Chips k="etiqueta" opts={OPCIONES.etiqueta} /></div>
         </section>
 
         <section>
           <h2>Texto (opcional)</h2>
-          <label className="ad-block">Descripción<textarea rows={3} value={f.descripcion} onChange={set('descripcion')} placeholder="Un solo propietario, libro de mantenimiento al día…" /></label>
-          <label className="ad-block">Equipamiento <small>(uno por línea)</small><textarea rows={5} value={f.equipamiento} onChange={set('equipamiento')} placeholder={'Climatizador bizona\nCámara trasera\nApple CarPlay'} /></label>
+          <label className="pn-block">Descripción<textarea rows={3} value={f.descripcion} onChange={set('descripcion')} placeholder="Un solo propietario, libro de mantenimiento al día…" /></label>
+          <label className="pn-block">Equipamiento <small>(uno por línea)</small><textarea rows={5} value={f.equipamiento} onChange={set('equipamiento')} placeholder={'Climatizador bizona\nCámara trasera\nApple CarPlay'} /></label>
         </section>
 
         <section>
           <h2>Estado</h2>
-          <div className="ad-seg big">
+          <div className="pn-seg big">
             {ESTADOS.map(([k, t]) => (
               <button type="button" key={k} className={(f.estado === k ? 'on ' : '') + k} onClick={() => setF((s) => ({ ...s, estado: k }))}>{t}</button>
             ))}
           </div>
-          <label className="ad-check">
+          <label className="pn-check">
             <input type="checkbox" checked={f.destacado} onChange={(e) => setF((s) => ({ ...s, destacado: e.target.checked }))} />
             Destacar en la portada
           </label>
         </section>
 
-        {err && <p className="ad-err">{err}</p>}
+        {err && <p className="pn-err">{err}</p>}
 
         {car && (
-          <button type="button" className={'ad-del' + (confirmDel ? ' sure' : '')} onClick={remove} disabled={!!busy}>
+          <button type="button" className={'pn-del' + (confirmDel ? ' sure' : '')} onClick={remove} disabled={!!busy}>
             {confirmDel ? 'Pulsa otra vez para borrarlo definitivamente' : 'Borrar este coche'}
           </button>
         )}
       </main>
 
-      <div className="ad-savebar">
-        <button className="ad-btn" onClick={save} disabled={!!busy}>{busy || (car ? 'Guardar cambios' : 'Publicar coche')}</button>
+      <div className="pn-savebar">
+        <button className="pn-btn" onClick={save} disabled={!!busy}>{busy || (car ? 'Guardar cambios' : 'Publicar coche')}</button>
       </div>
     </div>
   );
