@@ -68,7 +68,7 @@ export default function CartaForm() {
         </label>
         <label>Presupuesto
           <select value={f.presupuesto} onChange={set('presupuesto')}>
-            <option value="">Elige un rango</option>
+            <option value="">Indiferente</option>
             {PRESUPUESTOS.map((p) => <option key={p}>{p}</option>)}
           </select>
         </label>
