@@ -3,6 +3,7 @@ import { Header, Footer, MobileBar, Reveal } from '@/components/Site';
 import { wa } from '@/lib/config';
 import CarCard from '@/components/CarCard';
 import Carousel from '@/components/Carousel';
+import CartaForm from '@/components/CartaForm';
 import { getCars, ORDER, cover } from '@/lib/cars';
 import { NEGOCIO } from '@/lib/config';
 
@@ -59,21 +60,19 @@ export default async function Home() {
             <div className="reveal">
               <span className="eyebrow">Coche a la carta</span>
               <h2 className="title t-l">¿No está en el stock?<br />Te lo buscamos</h2>
-              <p className="lead">Nos dices qué coche quieres y cuánto quieres gastar. Nosotros buscamos la unidad, la revisamos y te la entregamos lista para circular.</p>
-              <div style={{ marginTop: 36 }}>
-                <a className="btn btn-white" target="_blank" rel="noopener" href={wa('Hola, quiero pedir un coche a la carta. Busco: ')}>Pedir mi coche</a>
+              <p className="lead">Cuéntanos qué coche quieres y cuánto quieres gastar. Nosotros buscamos la unidad, la revisamos y te la entregamos lista para circular.</p>
+              <div className="steps steps-mini">
+                {[
+                  ['01', 'Nos cuentas qué buscas'],
+                  ['02', 'Buscamos la mejor unidad'],
+                  ['03', 'La revisamos a fondo'],
+                  ['04', 'Te la entregamos en Baena'],
+                ].map(([n, t]) => (
+                  <div className="step" key={n}><span>{n}</span><div><h4>{t}</h4></div></div>
+                ))}
               </div>
             </div>
-            <div className="steps reveal">
-              {[
-                ['01', 'Nos cuentas qué buscas', 'Marca, modelo, presupuesto o combustible. Con lo que tengas claro nos basta.'],
-                ['02', 'Buscamos la unidad', 'Comparamos opciones y te enseñamos las que encajan, con fotos y datos reales.'],
-                ['03', 'La revisamos', 'Comprobamos estado, kilómetros e historial antes de darte el visto bueno.'],
-                ['04', 'Te la entregamos', 'Nos encargamos de los trámites y la recoges en Baena lista para circular.'],
-              ].map(([n, t, p]) => (
-                <div className="step" key={n}><span>{n}</span><div><h4>{t}</h4><p>{p}</p></div></div>
-              ))}
-            </div>
+            <div className="reveal"><CartaForm /></div>
           </div>
         </section>
 

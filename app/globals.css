@@ -221,3 +221,29 @@ footer{border-top:1px solid var(--line);padding:72px 0 100px;background:#08101f}
 }
 @media (max-width:520px){.grid{grid-template-columns:1fr}.wrap{padding:0 20px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* formulario coche a la carta */
+.steps-mini{margin-top:36px}
+.steps-mini .step{padding:16px 0}
+.steps-mini .step h4{margin:0;font-size:18px}
+.cf{background:var(--card);border:1px solid var(--line-2);border-radius:16px;padding:32px}
+.cf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 16px}
+.cf-grid .full{grid-column:1/-1}
+.cf-grid label:not(.full):nth-of-type(5),.cf-grid label:not(.full):nth-of-type(6),.cf-grid label:not(.full):nth-of-type(7){grid-column:span 1}
+.cf label{display:flex;flex-direction:column;gap:8px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.cf input:not([type=checkbox]),.cf select,.cf textarea{background:var(--bg);border:1px solid var(--line-2);border-radius:10px;color:#fff;font:inherit;font-size:15px;padding:12px 14px;outline:none;letter-spacing:0;text-transform:none;width:100%}
+.cf select{appearance:none;background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23b4c0d4' fill='none'/%3E%3C/svg%3E") right 14px center no-repeat;padding-right:34px}
+.cf select option{background:var(--card)}
+.cf input:focus,.cf select:focus,.cf textarea:focus{border-color:var(--sky)}
+.cf textarea{resize:vertical}
+.cf-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.cf-check{flex-direction:row!important;align-items:flex-start;gap:12px!important;margin:22px 0 24px;text-transform:none!important;letter-spacing:0!important;font-size:14px!important;color:var(--muted)!important;cursor:pointer}
+.cf-check input{width:18px;height:18px;margin-top:2px;accent-color:var(--sky);flex:none}
+.cf .btn{width:100%}
+.cf-err{background:rgba(255,120,120,.08);border:1px solid rgba(255,120,120,.3);color:#ffc0c0;border-radius:10px;padding:12px 14px;font-size:14px;margin-bottom:18px}
+.cf-err a{text-decoration:underline}
+.cf-ok{text-align:left}
+.cf-ok .title{margin:14px 0 12px}
+.cf-ok p{color:var(--muted);line-height:1.7}
+@media (max-width:860px){.cf{padding:22px}.cf-grid{grid-template-columns:1fr}}
+@media (min-width:861px) and (max-width:1100px){.cf-grid{grid-template-columns:1fr 1fr}}

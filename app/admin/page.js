@@ -99,6 +99,8 @@ function Panel({ session }) {
   const [editing, setEditing] = useState(null); // null | 'new' | car
   const [toast, setToast] = useState('');
   const [q, setQ] = useState('');
+  const [vista, setVista] = useState('coches');
+  const [sols, setSols] = useState([]);
 
   const say = (t) => { setToast(t); setTimeout(() => setToast(''), 2200); };
 
@@ -108,6 +110,18 @@ function Panel({ session }) {
     setLoading(false);
   }, []);
   useEffect(() => { load(); }, [load]);
+
+  const loadSols = useCallback(async () => {
+    const { data, error } = await sb().from('solicitudes').select('*').order('created_at', { ascending: false }).limit(200);
+    if (!error) setSols(data);
+  }, []);
+  useEffect(() => { loadSols(); }, [loadSols]);
+  const nuevas = sols.filter((x) => !x.atendida).length;
+  const atender = async (x) => {
+    setSols((ss) => ss.map((y) => (y.id === x.id ? { ...y, atendida: !x.atendida } : y)));
+    const { error } = await sb().from('solicitudes').update({ atendida: !x.atendida }).eq('id', x.id);
+    if (error) { loadSols(); say('No se ha podido guardar.'); }
+  };
 
   const counts = useMemo(() => Object.fromEntries(ESTADOS.map(([k]) => [k, cars.filter((c) => c.estado === k).length])), [cars]);
   const list = useMemo(() => {
@@ -144,6 +158,14 @@ function Panel({ session }) {
       </header>
 
       <main className="pn-main">
+        <div className="pn-views">
+          <button className={vista === 'coches' ? 'on' : ''} onClick={() => setVista('coches')}>Coches</button>
+          <button className={vista === 'sols' ? 'on' : ''} onClick={() => { setVista('sols'); loadSols(); }}>
+            Solicitudes{nuevas > 0 && <b>{nuevas}</b>}
+          </button>
+        </div>
+
+        {vista === 'sols' ? <Solicitudes sols={sols} atender={atender} /> : (<>
         <button className="pn-add" onClick={() => setEditing('new')}>
           <span>+</span> Añadir coche
         </button>
@@ -190,9 +212,34 @@ function Panel({ session }) {
             ))}
           </ul>
         )}
+        </>)}
       </main>
       {toast && <div className="pn-toast">{toast}</div>}
     </div>
+  );
+}
+
+/* ---------- solicitudes de coche a la carta ---------- */
+function Solicitudes({ sols, atender }) {
+  if (!sols.length) return <p className="pn-empty">Todavía no hay solicitudes. Llegan desde «Coche a la carta» en la web y también por email.</p>;
+  const fecha = (d) => new Date(d).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const tel = (t) => String(t).replace(/\D/g, '').replace(/^34(?=\d{9}$)/, '');
+  return (
+    <ul className="pn-list">
+      {sols.map((x) => (
+        <li key={x.id} className={'pn-sol' + (x.atendida ? ' done' : '')}>
+          <div className="pn-sol-top"><strong>{x.busca}</strong><small>{fecha(x.created_at)}</small></div>
+          <p className="pn-sol-who">{x.nombre} · {x.telefono}{x.email ? ` · ${x.email}` : ''}</p>
+          <p className="pn-sol-tags">{[x.presupuesto, x.combustible, x.cambio].filter(Boolean).join(' · ') || 'Sin preferencias'}</p>
+          {x.comentarios && <p className="pn-sol-com">{x.comentarios}</p>}
+          <div className="pn-sol-act">
+            <a href={`tel:${tel(x.telefono)}`}>Llamar</a>
+            <a href={`https://wa.me/34${tel(x.telefono)}?text=${encodeURIComponent(`Hola ${x.nombre.split(' ')[0]}, soy Rafa de Rafracar. Te escribo por el ${x.busca} que buscas.`)}`} target="_blank" rel="noopener">WhatsApp</a>
+            <button onClick={() => atender(x)}>{x.atendida ? 'Reabrir' : 'Atendida ✓'}</button>
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 }
 
